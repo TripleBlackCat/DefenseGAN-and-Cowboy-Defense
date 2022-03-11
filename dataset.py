@@ -40,12 +40,12 @@ class Datasets:
 
         train_loader = DataLoader(
             train_data,
-            batch_size=self.batch_size
+            batch_size=self.batch_size,
         )
 
         val_loader = DataLoader(
             val_data,
-            batch_size=self.batch_size
+            batch_size=self.batch_size,
         )
 
         return (train_loader,val_loader)

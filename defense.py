@@ -31,8 +31,8 @@ class Adversarial_Dataset(Dataset):
     
     def __init__(self,transform = None):
       self.transform = transform
-      image_name = "/content/gdrive/MyDrive/projects/optdefensegan/adv/mnist/FGSM_adv_images.pickle"
-      label_name = "/content/gdrive/MyDrive/projects/optdefensegan/adv/mnist/FGSM_adv_label.pickle"
+      image_name = "/home/kavi/Desktop/DefenseGAN-and-Cowboy-Defense/adv/mnist/FGSM_adv_images.pickle"
+      label_name = "/home/kavi/Desktop/DefenseGAN-and-Cowboy-Defense/adv/mnist/FGSM_adv_label.pickle"
 
       with open (image_name, 'rb') as fp:
           self.images = pickle.load(fp)
@@ -85,15 +85,14 @@ def load_adv_dataset():
   test_loader = DataLoader(
       sample,
       batch_size=batch_size,
-      num_workers=4
   )
 
   return test_loader
 
 def load_Cnn():
   model = MnistCnn()
-  model.load_state_dict(torch.load("/content/gdrive/MyDrive/projects/optdefensegan/checkpoints/mnist_classifier.pth"))
-  model = model.to(device)  
+  model.load_state_dict(torch.load("/home/kavi/Desktop/DefenseGAN-and-Cowboy-Defense/checkpoints/mnist_classifier.pth"))
+  model = model.to(device)
   return model
 
 def load_gan():
@@ -131,7 +130,7 @@ def defense_on_adversarial_images(sigma,is_defense_gan = False):
 
   for batch_idx, (inputs, labels) in tqdm(enumerate(test_loader)):
 
-        data = inputs.to(device)
+    data = inputs.to(device)
 
     # find z*
 
@@ -197,9 +196,6 @@ def defense_on_clean_img(sigma, is_defense_gan = False):
   epoch_size = 0
   # save_test_results = [] 
 
-  
-
-          
   for batch_idx, (inputs, labels) in tqdm(enumerate(test_loader)):
 
       
@@ -434,14 +430,14 @@ if __name__ == "__main__":
   # defense_on_clean_img(is_defense_gan = True)
   # defense_on_adversarial_images(is_defense_gan = True)
 
-  sigma = [0.01,0.1,1,10,100]
-
+  # sigma = [0.01,0.1,1,10,100]
+  sigma = [0.01]
   #rec_iter = 200, rec_rr = 10
   for sig in sigma:
-    test_accuracy_clean = defense_on_clean_img(sig,is_defense_gan = False)
-    test_accuracy_adv = defense_on_adversarial_images(sig,is_defense_gan = False)
-    writer.add_scalar("Variation of clean test-acc with sigma on cowboy defense",test_accuracy_clean,sig)
-    writer.add_scalar("Variation of adv test-acc with sigma on cowboy defense",test_accuracy_adv,sig)
+    # test_accuracy_clean = defense_on_clean_img(sig,is_defense_gan = True)
+    test_accuracy_adv = defense_on_adversarial_images(sig, is_defense_gan = True)
+    # writer.add_scalar("Variation of clean test-acc with sigma on defense gan",test_accuracy_clean,sig)
+    writer.add_scalar("Variation of adv test-acc with sigma on defense gan",test_accuracy_adv,sig)
 
   
 

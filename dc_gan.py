@@ -86,7 +86,7 @@ class DCGAN(LightningModule):
             #imgs_shape = (N,1,28,28)
             #adding noise from gaussian/random normal dist
             #with mean = 0 and std = 0.1 to stabilize gan training 
-            random_noise_1 = torch.empty((imgs.shape[0],1,28,28)).normal_(0,0.1)
+            random_noise_1 = torch.empty((imgs.shape[0],1,28,28)).normal_(0,0.1).to(self.device)
             imgs = imgs + random_noise_1
 
             real_loss = self.adversarial_loss(self.discriminator(imgs), valid)
@@ -95,7 +95,7 @@ class DCGAN(LightningModule):
             fake = torch.zeros(imgs.size(0), 1)
             fake = fake.type_as(imgs)
             fake_imgs = self(z)
-            random_noise_2 = torch.empty((imgs.shape[0],1,28,28)).normal_(0,0.1)
+            random_noise_2 = torch.empty((imgs.shape[0],1,28,28)).normal_(0,0.1).to(self.device)
             fake_imgs = fake_imgs + random_noise_2
 
             fake_loss = self.adversarial_loss(
@@ -208,15 +208,15 @@ def main(args) :
     logger = TensorBoardLogger(save_dir = "lightning_logs")
     model = DCGAN(**vars(args))
     obj = CheckpointEveryEpoch(100, args.save_path)
-    # trainer = Trainer(gpus=args.gpus, max_epochs = 100, logger = logger,tpu_cores=1, callbacks=[obj])
+    trainer = Trainer(gpus=args.gpus, max_epochs = 100, logger = logger, callbacks=[obj])
     # model = DCGAN.load_from_checkpoint("lightning_logs/default/version_10/checkpoints/epoch=99-step=99999.ckpt")
-    trainer = Trainer(gpus=args.gpus, max_epochs = 500, logger = logger,tpu_cores=1, callbacks=[obj],resume_from_checkpoint = "checkpoints/_e459_try_stable.ckpt")
+    # trainer = Trainer(gpus=args.gpus, max_epochs = 500, logger = logger, callbacks=[obj],resume_from_checkpoint = "checkpoints/_e459_try_stable.ckpt")
     trainer.fit(model)
     # model = DCGAN.load_from_checkpoint("/content/gdrive/MyDrive/projects/optdefensegan/checkpoints/_e20.ckpt")
-    # print(model.discriminator(torch.rand([2,1,28,28])))
-    # discriminator = model.discriminator
-    # generator = model.generator
-    # return (discriminator,generator)
+    print(model.discriminator(torch.rand([2,1,28,28])))
+    discriminator = model.discriminator
+    generator = model.generator
+    return (discriminator,generator)
 
 
 if __name__ == '__main__':

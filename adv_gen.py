@@ -1,4 +1,4 @@
-import foolbox as fb #python library to produce adversarial examples
+import foolbox
 import torch
 import torchvision
 from torchvision import transforms
@@ -19,8 +19,8 @@ def fgsm_adv_generate(dataset_name,adv_root_folder,model,device,test_loader):
     if not os.path.exists(root_path_to_store):
       os.mkdir(root_path_to_store)
     
-    fmodel = fb.PyTorchModel(model, bounds=(-1,1),device = device)
-    attack = fb.attacks.FGSM()
+    fmodel = foolbox.models.PyTorchModel(model, bounds=(-1,1),device = device)
+    attack = foolbox.attacks.FGSM()
 
     fgsm_adv = []
     fgsm_index = []
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # model_path = "/home/manas/Desktop/projects/sigmared/Code/optdefensegan/checkpoints/mnist_classifier.pth"
-    model_path = "/content/gdrive/MyDrive/projects/optdefensegan/checkpoints/mnist_classifier.pth"
+    model_path = "/home/kavi/Desktop/DefenseGAN-and-Cowboy-Defense/checkpoints/mnist_classifier.pth"
 
     model = MnistCnn()
     model.load_state_dict(torch.load(model_path,map_location = torch.device("cpu"))) # if no gpu else simple torch.load(model_path)

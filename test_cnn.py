@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     model = MnistCnn()
     # model_path = "/home/manas/Desktop/projects/sigmared/Code/optdefensegan/checkpoints/mnist_classifier.pth"
-    model_path = "/content/gdrive/MyDrive/projects/optdefensegan/checkpoints/mnist_classifier.pth"
+    model_path = "/home/kavi/Desktop/DefenseGAN-and-Cowboy-Defense/checkpoints/mnist_classifier.pth"
 
     transform_test = transforms.Compose([
     transforms.RandomCrop(28),
